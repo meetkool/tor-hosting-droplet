@@ -108,6 +108,8 @@ function manage($droplet="", $totp=""){
                             $action = 'Check';
                         }elseif($action === 'r'){
                             $action = 'Restart';
+                        }elseif($action === 'n'){
+                            $action = 'Create';
                         }else{
                             unset($action);
                         }
@@ -124,6 +126,8 @@ function manage($droplet="", $totp=""){
                                 $action = 'Check';
                             }elseif($action === 'r'){
                                 $action = 'Restart';
+                            }elseif($action === 'n'){
+                                $action = 'Create';
                             }else{
                                 unset($action);
                             }
@@ -131,7 +135,11 @@ function manage($droplet="", $totp=""){
                     }
                 }
                 if(isset($action)){
-                    act($action);
+                    if(isset($type)){
+                        act($action, $type);
+                    }else{
+                        act($action);
+                    }
                     echo '<div class="temp">Loading ...</div>';
                     echo '<style>.temp {display: block}</style>';
                     sleep(5);
@@ -143,6 +151,7 @@ function manage($droplet="", $totp=""){
                             echo '<option value="s">Start</option>';
                             echo '<option value="d">Stop</option>';
                             echo '<option value="r">Restart</option>';
+                            echo '<option value="b">Backup</option>';
                         echo '</select>';
                     echo '</div>';
                     echo '<div><label></label><input type="submit" value="Submit"/></div>';

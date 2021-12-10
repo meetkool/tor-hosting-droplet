@@ -18,7 +18,9 @@ help () {
     echo "     -s | --start <container>         This will start your droplet - and all it's processes."
     echo "     -d | --stop <container>          This will turn off your droplet."
     echo "     -r | --restart <container>       This will restart your droplet and all it's processes."
-    echo "     -n | --new <container>           This will create a new droplet with the name and hostname <container>"
+    echo "     -n | --new <container> <type>    This will create a new droplet with the name and hostname <container>, and type <type>."
+    echo "                            [ apache2 | ubuntu ]"
+    echo "     -b | --backup <container>       This will backup your droplet in a snapshot style."
     echo "     -h | --help                      This displays this help prompt."
     echo;
     echo;
@@ -47,6 +49,14 @@ create () {
     echo "Created "$container
 }
 
+backup () {
+    docker stop $container;
+    docker commit $container $container:$( date +%Y-%m-%d-%H_%M_%S );
+    docker start $container;
+    docker exec $container bash ./run.sh;
+    echo "Backed up "$container
+}
+
 start_container () {
     docker start $container;
     docker exec $container bash ./run.sh;
@@ -66,7 +76,7 @@ restart_container () {
 }
 
 usage () {
-    echo "usage: ./app.sh [[[-c | --check] | [-s | --start] | [-d | --stop] | [-r | --restart]] <container>]  | [-h | --help]]"
+    echo "usage: ./app.sh [[[-c | --check] | [-s | --start] | [-d | --stop] | [-r | --restart] | [-n | --new] | [-b | --backup]] <container> (<type>)?]  | [-h | --help]]"
 }
 
 while [ "$1" != "" ]; do
@@ -92,6 +102,10 @@ while [ "$1" != "" ]; do
         -r | --restart )        shift
                                 container="$1"
                                 restart_container
+                                ;;
+        -b | --backup )         shift
+                                container="$1"
+                                backup
                                 ;;
         -h | --help )           help
                                 exit
