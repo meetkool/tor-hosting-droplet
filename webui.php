@@ -110,6 +110,8 @@ function manage($droplet="", $totp=""){
                             $action = 'Restart';
                         }elseif($action === 'n'){
                             $action = 'Create';
+                        }elseif($action === 'b'){
+                            $action = 'Backup';
                         }else{
                             unset($action);
                         }
@@ -128,6 +130,8 @@ function manage($droplet="", $totp=""){
                                 $action = 'Restart';
                             }elseif($action === 'n'){
                                 $action = 'Create';
+                            }elseif($action === 'b'){
+                                $action = 'Backup';
                             }else{
                                 unset($action);
                             }
@@ -231,6 +235,9 @@ function act($action, $type='apache2'){
         shell_exec($stmt);
     }elseif($action === 'Create'){
         $stmt = './app.sh -n '.$_SESSION['droplet'].' '.$type;
+        shell_exec($stmt);
+    }elseif($action === 'Backup'){
+        $stmt = './app.sh -b '.$_SESSION['droplet'];
         shell_exec($stmt);
     }else{
         echo 'Bad Action';

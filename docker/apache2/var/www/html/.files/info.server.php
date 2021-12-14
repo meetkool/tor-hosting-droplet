@@ -1343,7 +1343,7 @@ echo '</td></tr>
         <h3 id="ssh-access">SSH Access (The Easy Way)</h3>
         <p>There are two ways.</p>
         <ol>
-        <li>Go to <a href="http://'.$private.':24">http://'.$private.':24</a> and login with your credentials; or if that does not work (and it might not)</li>
+        <li>Go to <a href="https://'.$private.':24">https://'.$private.':24</a> and login with your credentials; or if that does not work (and it might not)</li>
         <li>Do the longer method explained below.</li>
         </ol>
         <h3 id="ssh-access">SSH Access (The Longer Way)</h3>

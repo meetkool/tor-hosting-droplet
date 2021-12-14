@@ -14,14 +14,14 @@ help () {
     echo "This is the CLI tool to manage your Droplets, but works for all docker containers.";
     echo;
     echo "To get started, try any of the following parameters:";
-    echo "     -c | --check <container>         This will tell you if your droplet is running or not."
-    echo "     -s | --start <container>         This will start your droplet - and all it's processes."
-    echo "     -d | --stop <container>          This will turn off your droplet."
-    echo "     -r | --restart <container>       This will restart your droplet and all it's processes."
-    echo "     -n | --new <container> <type>    This will create a new droplet with the name and hostname <container>, and type <type>."
-    echo "                            [ apache2 | ubuntu ]"
-    echo "     -b | --backup <container>       This will backup your droplet in a snapshot style."
-    echo "     -h | --help                      This displays this help prompt."
+    echo "     -c | --check <container>         This will tell you if your droplet is running or not.";
+    echo "     -s | --start <container>         This will start your droplet - and all it's processes.";
+    echo "     -d | --stop <container>          This will turn off your droplet.";
+    echo "     -r | --restart <container>       This will restart your droplet and all it's processes.";
+    echo "     -n | --new <container> <type>    This will create a new droplet with the name and hostname <container>, and type <type>.";
+    echo "                            [ apache2 | ubuntu ]";
+    echo "     -b | --backup <container>        This will backup your droplet in a snapshot style.";
+    echo "     -h | --help                      This displays this help prompt.";
     echo;
     echo;
     echo;
@@ -51,7 +51,17 @@ create () {
 
 backup () {
     docker stop $container;
-    docker commit $container $container:$( date +%Y-%m-%d-%H_%M_%S );
+    test=$( sudo docker images -q onionz/backups:$container );
+    if [[ -n "$test" ]]; then
+        docker rmi onionz/backups:$container;
+        docker commit $container onionz/backups:$container;
+        docker push onionz/backups:$container;
+        docker rmi onionz/backups:$container
+    else
+        docker commit $container onionz/backups:$container;
+        docker push onionz/backups:$container;
+        docker rmi onionz/backups:$container
+    fi
     docker start $container;
     docker exec $container bash ./run.sh;
     echo "Backed up "$container
